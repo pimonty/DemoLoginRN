@@ -1,4 +1,4 @@
-<img alt="Expo" src="screens/expo.png">
+<img alt="Expo" src="expo.png">
 
 The tutorial has been published in Expo. You can running this tutorial downloading [Expo](https://expo.io/).
 
