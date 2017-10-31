@@ -1,3 +1,16 @@
+<img alt="Expo" src="screens/expo.png">
+
+The tutorial has been published in Expo. You can running this tutorial downloading [Expo](https://expo.io/).
+
+If you have Expo on your smarthphone, scan this [code QR](https://expo.io/@fjmontero/Demo-RN).
+
+
+##Description
+Demonstration of connection to Firebase database for login.
+
+
+## Help
+
 This project was bootstrapped with [Create React Native App](https://github.com/react-community/create-react-native-app).
 
 Below you'll find information about performing common tasks. The most recent version of this guide is available [here](https://github.com/react-community/create-react-native-app/blob/master/react-native-scripts/template/README.md).
