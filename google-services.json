@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "227556864832",
+    "firebase_url": "https://mylogin-8ca5b.firebaseio.com",
+    "project_id": "mylogin-8ca5b",
+    "storage_bucket": "mylogin-8ca5b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:227556864832:android:a447112432c3fba1",
+        "android_client_info": {
+          "package_name": "com.Mylogin.android"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "227556864832-fkcn5gt3nhliucfr6e5vtvgto8sdnp51.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCFtFVgmmEVfQMqetq2a4q3UAlLeZIfL-0"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

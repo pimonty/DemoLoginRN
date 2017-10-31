@@ -1,0 +1,76 @@
+crear carpeta exp init myLogin
+instalar stage-0 ya el babel lo tiene -> npm install --save-dev babel-preset-stage-0
+
+crear run.sh
+#!/bin/bash
+exp start --dev --lan
+
+empezar a meter codigo
+
+El proyecto se ha creado BLANK
+
+Hay que definir mediante FLEX el estilo de la pantalla del login.(Maquetación-diseño)
+
+Muchisimo problemas graves de servidor error 500 y error VIEW.NO_ID que no fueron posible resolver ha habido que
+apagar el portatil para reintentar,no dejes de comprobar que:
+
+Tener la ultima version de EXPO en el movil
+Con todo cerrado no haya un nodejs colgado matarlos todos
+tener espacio en ssd
+tener memoria RAM suficiente
+Quitar el modo development al movil android desconectarlo del portatil usarlo por la red local porque en expo no hace falta solo en react native.
+cerrar todas las aplicaciones del movil , liberar memoria, espacio ok?
+Cuidado con el cable del movil y si lo mueves, tambien cuidado a ver si el conector del portatil o movil no hacen un mal contacto.
+No utilices regletas de usb para hacer las pruebas demostrado que te ha dado más problemas cuando es así.
+
+
+
+Atención el error VIEW_NO_ID se lo pasa por alto al pulsar refresh botón rojo en su parte inferior. siendo correcto en apareciencia su funcionamiento (¿?¿?¿?)
+ATENCION tener desactivado el LIVE RELOAD!! SOLO TENER EL HOT RELOADING EN EL MOVIL
+
+TODO CAMBIA CUANDO:
+
+Creas otro nuevo proyecto usando create-react-native "nombre"
+Falla al ejecutar npm start porque necesita actualizar el WATCH de ficheros su max y min, en la web de troubles de react está, se incluye
+en un LANZADOR.SH :
+
+
+#!/bin/bash
+echo fs.inotify.max_user_watches=582222 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
+exp start --dev --lan
+
+A partir de aqui se salta el npm star pero funciona perfectamente.....se crea la llamada con IMPORT a otro componente correctamente.
+
+idea: Sería conveniente observar el package.json con otros proyectos que funcionen, y el fichero .babelrc donde tiene las PRECARGAS...stage-0? no está por defecto
+muy util con sintaxis "..." para leer JSON por ejemplo (demo-mern)
+
+
+
+Firebase:
+
+Esta asociado a google y a una de tus cuentas de email, donde quieras logearte.
+
+Tienes que isntalar via "sudo npm install -g firebase"
+
+ejecutar dentro de la carpeta del proyecto "firebase init"
+posteriormente loguearte.
+
+
+tienes que crear una aplicacion en firebase 
+
+esto te lleva al panel de la aplicacion donde tienes los datos de conexion para ios, android y web.
+
+tienes que seleccionar web.
+
+crear un usuario desde la consola , habilitar email y contraseña
+acto seguido colocar un email y una contraseña cualquiera que tienes que recordar
+
+jproteus **2****f**
+
+
+
+
+
+
+
+
