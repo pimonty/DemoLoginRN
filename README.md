@@ -2,7 +2,7 @@
 
 The tutorial has been published in Expo. You can running this tutorial downloading [Expo](https://expo.io/).
 
-If you have Expo on your smarthphone, scan this [code QR](exp://exp.host/@fjmontero/myloginrn).
+If you have Expo on your smarthphone, scan this [code QR](https://expo.io/@fjmontero/myloginrn).
 
 
 ## Description 
