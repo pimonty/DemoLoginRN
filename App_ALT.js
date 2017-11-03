@@ -88,67 +88,59 @@ export default class App extends React.Component {
     //   renderizer: '',
     // });
 
-    return (
-      // <KeyboardAvoidingView behavior='padding' style={styles.container} >
-        <KeyboardAvoidingView behavior='padding' style= {BoolPortrait ? styles.containerPortrait : styles.containerLandscape} >
+    return // <KeyboardAvoidingView behavior='padding' style={styles.container} >
+      <KeyboardAvoidingView behavior="padding" style={BoolPortrait ? styles.containerPortrait : styles.containerLandscape}>
+        {/* <Image style={styles.seccion1} source={require('./assert/pictures/fondologin.png')}/> */}
 
-         {/* <Image style={styles.seccion1} source={require('./assert/pictures/fondologin.png')}/> */}
-
-        <View style= {BoolPortrait ? styles.seccion1_p : styles.seccion1_l}>
-          <Image
-            style={BoolPortrait ? styles.piclogin_p : styles.piclogin_l}
-            source= {require('./assert/pictures/Voyager2.png')}
-          />
-
+        <View style={BoolPortrait ? styles.seccion1_p : styles.seccion1_l}>
+          <Image style={BoolPortrait ? styles.piclogin_p : styles.piclogin_l} source={require("./assert/pictures/Voyager2.png")} />
         </View>
         <View style={BoolPortrait ? styles.seccion2_p : styles.seccion2_l}>
+          <StatusBar barStyle="light-content" />
 
-          <StatusBar
-            barStyle='light-content' />
-
-            <Text style={styles.Texto_Titulo}>Conectar con Firebase ({orientation}) </Text>
+          <Text style={styles.Texto_Titulo}>
+            Conectar con Firebase ({orientation}){" "}
+          </Text>
 
           {/* Support any param to Inputext component */}
-          <Text style={styles.Texto_UserPass}>Usuario: fj.proteus@gmail.com</Text>
-          <Inputlog
-            style={BoolPortrait ? styles.txtinput_p : styles.txtinput_l}
-            placeholder='User'
-            returnKeyType='next'
-            multiline={false}
-            // IOS onSubmitEditing={()=>this.passwordInput.focus()}
-            keyboardType='email-address'
-            autoCapitalize='none'
-            //value = 'fj.proteus(@)gmail.com'
-            autoCorrect={false}
-            placeholderTextColor='rgba(155,155,145,0.7)'
-            onChangeText={(user) => this.setState({user})}
-            ref={(input) => datalogin.user = input} />
+          <Text style={styles.Texto_UserPass}>
+            Usuario: fj.proteus@gmail.com
+          </Text>
+          <Inputlog style={BoolPortrait ? styles.txtinput_p : styles.txtinput_l} placeholder="User" returnKeyType="next" multiline={false} keyboardType="email-address" autoCapitalize="none" autoCorrect={false // IOS onSubmitEditing={()=>this.passwordInput.focus()} //value = 'fj.proteus(@)gmail.com'
+            } placeholderTextColor="rgba(155,155,145,0.7)" onChangeText={user => this.setState(
+                { user } 
+              )} ref={input => (datalogin.user = input)} />
           <Text style={styles.Texto_UserPass}>Clave: contrasena</Text>
-          <Inputlog
-            style={BoolPortrait ? styles.txtinput_p : styles.txtinput_l}
-            placeholder='Password'
-            returnKeyType='go'
-            placeholderTextColor='rgba(155,155,145,0.7)'
-            //value= 'contrasena'
-            onChangeText={(pass) => this.setState({pass})}
-            ref={(input) => datalogin.pass = input}
-            secureTextEntry/>
+          <Inputlog style={BoolPortrait ? styles.txtinput_p : styles.txtinput_l} placeholder="Password" returnKeyType="go" placeholderTextColor="rgba(155,155,145,0.7)" onChangeText={pass => this.setState( //value= 'contrasena'
+                {
+                  pass
+                }
+              )} ref={input => (datalogin.pass = input)} secureTextEntry />
 
-                   
-          <TouchableOpacity style={styles.btnlogin} onPress={this._onPressLoginButton.bind(this)}  onPressOut={() => this.setState({renderizer: ''})}>
-            <Text style={styles.btnlogintxt}>Login test{this.state.prueba}</Text>
-          </TouchableOpacity>
-          
-          
-          <Text>{this.state.renderizer}</Text>
+          {/* <TouchableOpacity style={styles.btnlogin} onPress={this._onPressLoginButton.bind(this)} onPressOut={() => this.setState(
+                { renderizer: "" }
+              )}>
+            <Text style={styles.btnlogintxt}>Login{this.state.prueba}</Text>
+          </TouchableOpacity> */}
+
+          {/* <TouchableOpacity 
+          style={
+            styles.btnlogin
+          } onPress={()=> {
+            <Inputlogin funcEvent={this.eventLogin} user={datalogin.user} pass={datalogin.pass} />  
+          }} onPressOut={() => this.setState(
+                { renderizer: "" }
+              )}>
+            <Text style={styles.btnlogintxt}>
+              Login test
+            </Text>
+          </TouchableOpacity> */}
+
           
 
+          {/* <Text>{this.state.renderizer}</Text> */}
         </View>
-
-
-      </KeyboardAvoidingView>
-
-    );
+      </KeyboardAvoidingView>; 
   }
 
   //Function execute acction when press the login button. 
