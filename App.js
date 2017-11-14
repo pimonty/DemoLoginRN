@@ -31,6 +31,11 @@ export default class App extends React.Component {
                 renderizer:'',}; 
     this.pintar; 
     this.msg_loading = <Text>Loading...</Text>   
+
+    this.localuser='';
+    this.localpass='';
+
+    this.test_pintar = <Text>Inicializando RENDER</Text>;
     
   }
 
@@ -53,25 +58,40 @@ export default class App extends React.Component {
   }
 
   _onPressLoginButton(){
-    console.log('usuario:' + this.state.user); 
-    console.log('password:' + this.state.pass);
-    global.datalogin.user = this.state.user;
-    global.datalogin.pass = this.state.pass;
-    console.log('usuario:'+global.datalogin.user); 
-    console.log('password:'+global.datalogin.pass);
+    console.log('usuario:' + this.localuser); 
+    console.log('password:' + this.localpass);
+    global.datalogin.user = this.localuser;
+    global.datalogin.pass = this.localpass;
+    console.log('usuario:' + global.datalogin.user); 
+    console.log('password:' + global.datalogin.pass);
 
-    this.msg_loading = <Inputlogin funcEvent={this.eventLogin} user={global.datalogin.user} pass={global.datalogin.pass} />;
+    //Dentro de render() no lo renderiza
+    //this.msg_loading = <Inputlogin funcEvent={this.eventLogin} user={global.datalogin.user} pass={global.datalogin.pass} />;
+    //console.log(this.msg_loading);
 
-    this.setState({
-      renderizer: <Inputlogin funcEvent={this.eventLogin} user={global.datalogin.user} pass={global.datalogin.pass} />
-    });
+    // this.setState({
+    //   renderizer: <Inputlogin funcEvent={this.eventLogin} user={global.datalogin.user} pass={global.datalogin.pass} />
+    // });
+
+   
+
+    let pruebame ='mensaje desde otra variable';
+    this.test_pintar = <Inputlogin funcEvent={this.eventLogin} user={global.datalogin.user} pass={global.datalogin.pass} />;
 
   }
 
   _onPressOutLoginButton(){
     console.log('Informo que se ha dejado de presionar el botón de login.')
   }
-   
+  
+  _clear(){
+    console.log('limpieza del login renderizado ');
+    this.test_pintar = '';
+    // this.setState({
+    //   renderizer: ''
+    // });
+
+  }
 
   render() {
     //Each render is calculated
@@ -79,16 +99,16 @@ export default class App extends React.Component {
     const orientation = tam.height > tam.width ? "portrait" : "landscape";
     const BoolPortrait = tam.height > tam.width ? true : false;
     
-    this.msg_loading= console.log("debug info: Actualiza el render..");
+    this.msg_loading= '';
+    console.log("debug info: Actualiza el render..");
 
-    var test_pintar = <Text>|||||||||||||||||||||</Text>;
-
+    //this.test_pintar = '';
     
   
     //ATENCIÓN EJEMPLO DIDACTICO: CREA BUCLE INFINITO, MUCHO CUIDADO
     // this.setState({
     //   renderizer: '',
-    // });
+    // }); 
 
     return (
       // <KeyboardAvoidingView behavior='padding' style={styles.container} >
@@ -100,7 +120,7 @@ export default class App extends React.Component {
           <Image
             style={BoolPortrait ? styles.piclogin_p : styles.piclogin_l}
             source= {require('./assert/pictures/Voyager2.png')}
-          />
+          /> 
 
         </View>
         <View style={BoolPortrait ? styles.seccion2_p : styles.seccion2_l}>
@@ -129,7 +149,7 @@ export default class App extends React.Component {
            //onChangeText={(user) => setState(user)}
            //aunque nunca "user" se usara en el render, si que lo refrescaba, cuidado.
 
-            onChangeText={(user) => console.log('onChangeUser:'+user)}
+            onChangeText={(user) => { console.log('onChangeUser:' + user); this.localuser = user;}}
             ref={(input) => datalogin.user = input} />
           <Text style={styles.Texto_UserPass}>Clave: contrasena</Text>
           <Inputlog
@@ -138,18 +158,19 @@ export default class App extends React.Component {
             returnKeyType='go'
             placeholderTextColor='rgba(155,155,145,0.7)'
             //value= 'contrasena'
-            onChangeText={(pass) => console.log('onChangePass:'+pass)}
+            onChangeText={(pass) => { console.log('onChangePass:' + pass); this.localpass = pass;}}
             ref={(input) => datalogin.pass = input}
             secureTextEntry/>
 
+          
 
-          <TouchableOpacity style={styles.btnlogin} onPress={()=>{this._onPressLoginButton();}}  onPressOut={() => this.setState({renderizer: ''})}> 
+          <TouchableOpacity style={styles.btnlogin} onPress={() => { this._onPressLoginButton();  console.log('Presionado BtnLogin');  }} onPressOut={() => { this.setState({ renderizer: '' }); console.log('Liberado BtnLogin');}}> 
             <Text style={styles.btnlogintxt}>Login test{this.state.prueba}</Text>
           </TouchableOpacity>
-        
-          {<Text>{this.msg_loading}</Text>}
-          {<Text>{this.state.renderizer}</Text>}
+                  
          
+         {<Text>{this.test_pintar}</Text>}
+         {this._clear()}
         
         </View>
 

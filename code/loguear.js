@@ -18,11 +18,11 @@ var firebaseConfig = {
   messagingSenderId: "722384392248"
 };
 
-
-
 firebase.initializeApp(firebaseConfig);
 
 export default class Inputlogin extends Component {
+
+  
 
   constructor(props) {
     super(props);
@@ -33,10 +33,13 @@ export default class Inputlogin extends Component {
       Eexito_auth: false,
     };
 
+    console.log('-------CONTRUCTOR EJECUTADO -----');
     this.exito_login = false;
-    this.existe_user = false;   
+    this.existe_user = false;
     this.max_logintentos = 3;
-    this.logintentos=0;
+    this.logintentos = 0;
+
+    
     
 
   }
@@ -101,20 +104,32 @@ espera_desbloqueo_candado(intentos){
 
 
   _init_login() {
+    
     console.log('WELLCOME LOGUEAR.JS');
     //User with active session at this moment
+
     //Si un usurio esta loguenadose, esta función espera hasta
     //que se determine que lo está, entonces esta responderá true.
+
+
+
+    //NOTA WARNING MOLESTO:
+    //Indica que possible promesa no se maneje correctamente. Barra amariilla indicando
+    //ID:0,1,2,3....en la pantalla del móvil. Se trata de asignar un valor booleano a 
+    // una variable "this." del constructor. Hay que sustituirlo por let "NombreVar" dentro
+    //de la función.
+
+     this.existe_user = true;
+     let testerwarning = true;
+    
     firebase.auth().onAuthStateChanged(function (user) {
-
-      this.existe_user = true
-
       if (user) {
         console.log('(NO OK)Existe un usuario logueado, se marca para desloguear.');
-        this.existe_user = true;
+         this.existe_user = true;
       } else {
         console.log('(OK) No existe un usuario activo.');
         this.existe_user = false;
+        testerwarning = false;
       }
     });
 
@@ -134,7 +149,7 @@ espera_desbloqueo_candado(intentos){
         console.log('Deslogueado con éxito el usuario anterior.');
       }, function (error) {
         console.error('Error. El usuario anterior sigue logueado.', error);
-      });
+      }); 
     }
 
     if (this.exito_auth) {
@@ -147,6 +162,8 @@ espera_desbloqueo_candado(intentos){
     var email = this.props.user 
     var password = this.props.pass; 
 
+    console.log(email + ':' + password);
+
     //Captura el código de error y mensaje de Firebase.
     var errorCode = false;
     var errorMensaje = false;
@@ -157,6 +174,8 @@ espera_desbloqueo_candado(intentos){
     
     var logueado_con_exito=false;
     this.exito_login = false;
+
+    console.log('----------------------------------------------DEBUG*****');
 
     //Authentification via email-pass
     //El Candado se trata dentro de la condición if (por ser asíncrona la ejecución).
@@ -173,6 +192,7 @@ espera_desbloqueo_candado(intentos){
     }).catch(function (error) { 
       //Manejo de errores.       
       console.log('Firebase-auth.CATCH - ERROR CODE:'+error.code);
+      
       
       switch(error.code){
         
