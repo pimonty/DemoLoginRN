@@ -19,7 +19,7 @@ var firebaseConfig = {
 };
 
 
-//var firebase = 
+
 firebase.initializeApp(firebaseConfig);
 
 export default class Inputlogin extends Component {
@@ -62,7 +62,7 @@ _UI_login_msg(intentos){
         console.log("Exito candado desbloqueado"); 
         this.props.funcEvent('El candado se ha desbloqueado, EXITO LOGIN TRUE.');                
       } else{
-        //No permite ejecutar más mensajes de error.
+// No permite ejecutar más mensajes de error.
         this.logintentos = this.max_logintentos +1;
         this.props.funcEvent('No ha sido posible:'+datalogin.error);    
 
@@ -86,11 +86,11 @@ espera_desbloqueo_candado(intentos){
   this.max_logintentos=intentos;
   this.logintentos=0;
 
-  while(intentos>0){ 
-   this._UI_login_msg(intentos-1);
-   //this.prueba();
-    --intentos;
-  }
+  while (intentos > 0) {
+		this._UI_login_msg(intentos - 1);
+		//this.prueba( ) ;
+		--intentos;
+	}
   
   console.log('SALE espera_desbloqueo_candado'); 
 }
@@ -240,6 +240,7 @@ espera_desbloqueo_candado(intentos){
   //Se invoca en la 2º y posteriores llamadas al componente cargado.
   componentWillReceiveProps(nextProps) {
 
+    //(SOLVED: en el Onchange de los InputLog se hacía un setState)
     //BUG:
     //Al intentar el primer login todo bien. this.state.renderizer="objeto login"
     //El problema es al escribir posteriormente en el TextInput(user-pass), invoca al objeto login a través de

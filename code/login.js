@@ -3,7 +3,7 @@ import React,{ Component } from 'react';
 import {TextInput, Text, View} from 'react-native';
 
 
-export default class Inputlogin extends Component {
+export default class Inputforlogin extends Component {
 
 
     render() {

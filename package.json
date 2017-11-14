@@ -27,6 +27,8 @@
     "preset": "jest-expo"
   },
   "dependencies": {
+    "eslint-plugin-flowtype": "^2.39.1",
+    "eslint-plugin-prettier": "^2.3.1",
     "expo": "^21.0.0",
     "firebase": "^4.5.0",
     "react": "16.0.0-alpha.12",

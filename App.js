@@ -1,26 +1,25 @@
-import React from 'react';
-import { StyleSheet, Text, TextInput, View, Image, Dimensions, TouchableOpacity, KeyboardAvoidingView, StatusBar  } from 'react-native';
+import React from 'react'
+import {StyleSheet, Text, TextInput , View , Image , Dimensions, TouchableOpacity, KeyboardAvoidingView, StatusBar  } from 'react-native'
 
 import Inputlog from './code/login.js';
 import Inputlogin from './code/loguear.js';
 
 
 global.tam = Dimensions.get('window')
-global.datalogin={user:'',pass:'',error:''};
+global.datalogin={user:'',pass:'',error:'',loading:false};
 global.candado_logueando=false;
-
 
 
 
 var debug;
 
-console.log(datalogin.user);
+console.log(global.datalogin.user);
 
 
 export default class App extends React.Component {
   //
 
-  state_Dim=Dimensions.get('window');
+  state_Dim = Dimensions.get('window');
   handler = dims => this.setState(dims);
   debug = 'chacho';
 
@@ -30,7 +29,9 @@ export default class App extends React.Component {
     this.state= {user: '',
                   pass:'', 
                 renderizer:'',}; 
-    this.pintar;    
+    this.pintar; 
+    this.msg_loading = <Text>Loading...</Text>   
+    
   }
 
   componentWillMount(){
@@ -51,21 +52,20 @@ export default class App extends React.Component {
     alert(msg);
   }
 
-  _onPressLoginButton(){    
-    console.log('usuario:'+this.state.user); 
-    console.log('password:'+this.state.pass);
-    datalogin.user = this.state.user;
-    datalogin.pass = this.state.pass;
-    console.log('usuario:'+datalogin.user); 
-    console.log('password:'+datalogin.pass);
-      
+  _onPressLoginButton(){
+    console.log('usuario:' + this.state.user); 
+    console.log('password:' + this.state.pass);
+    global.datalogin.user = this.state.user;
+    global.datalogin.pass = this.state.pass;
+    console.log('usuario:'+global.datalogin.user); 
+    console.log('password:'+global.datalogin.pass);
 
+    this.msg_loading = <Inputlogin funcEvent={this.eventLogin} user={global.datalogin.user} pass={global.datalogin.pass} />;
 
     this.setState({
-      renderizer: <Inputlogin funcEvent={this.eventLogin} user={datalogin.user} pass={datalogin.pass}></Inputlogin>,
+      renderizer: <Inputlogin funcEvent={this.eventLogin} user={global.datalogin.user} pass={global.datalogin.pass} />
     });
 
-    
   }
 
   _onPressOutLoginButton(){
@@ -75,10 +75,12 @@ export default class App extends React.Component {
 
   render() {
     //Each render is calculated
-    tam = Dimensions.get('window')
+    let tam = Dimensions.get('window')
     const orientation = tam.height > tam.width ? "portrait" : "landscape";
     const BoolPortrait = tam.height > tam.width ? true : false;
     
+    this.msg_loading= console.log("debug info: Actualiza el render..");
+
     var test_pintar = <Text>|||||||||||||||||||||</Text>;
 
     
@@ -121,7 +123,13 @@ export default class App extends React.Component {
             //value = 'fj.proteus(@)gmail.com'
             autoCorrect={false}
             placeholderTextColor='rgba(155,155,145,0.7)'
-            onChangeText={(user) => this.setState({user})}
+
+           //NOTA IMPORTANTE: Cualquier setState para cualquier variable
+           //Implica refrescar el render, NUNCA coloques setState en un ONCHANGE como este caso.
+           //onChangeText={(user) => setState(user)}
+           //aunque nunca "user" se usara en el render, si que lo refrescaba, cuidado.
+
+            onChangeText={(user) => console.log('onChangeUser:'+user)}
             ref={(input) => datalogin.user = input} />
           <Text style={styles.Texto_UserPass}>Clave: contrasena</Text>
           <Inputlog
@@ -130,19 +138,19 @@ export default class App extends React.Component {
             returnKeyType='go'
             placeholderTextColor='rgba(155,155,145,0.7)'
             //value= 'contrasena'
-            onChangeText={(pass) => this.setState({pass})}
+            onChangeText={(pass) => console.log('onChangePass:'+pass)}
             ref={(input) => datalogin.pass = input}
             secureTextEntry/>
 
-                   
-          <TouchableOpacity style={styles.btnlogin} onPress={this._onPressLoginButton.bind(this)}  onPressOut={() => this.setState({renderizer: ''})}>
+
+          <TouchableOpacity style={styles.btnlogin} onPress={()=>{this._onPressLoginButton();}}  onPressOut={() => this.setState({renderizer: ''})}> 
             <Text style={styles.btnlogintxt}>Login test{this.state.prueba}</Text>
           </TouchableOpacity>
-          
-          
-          <Text>{this.state.renderizer}</Text>
-          
-
+        
+          {<Text>{this.msg_loading}</Text>}
+          {<Text>{this.state.renderizer}</Text>}
+         
+        
         </View>
 
 
