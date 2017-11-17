@@ -66,7 +66,7 @@ export default class App extends React.Component {
     console.log('password:' + global.datalogin.pass);
 
     //Dentro de render() no lo renderiza
-    //this.msg_loading = <Inputlogin funcEvent={this.eventLogin} user={global.datalogin.user} pass={global.datalogin.pass} />;
+    this.msg_loading = <Inputlogin funcEvent={this.eventLogin} user={global.datalogin.user} pass={global.datalogin.pass} />;
     //console.log(this.msg_loading);
 
     // this.setState({
@@ -99,7 +99,7 @@ export default class App extends React.Component {
     const orientation = tam.height > tam.width ? "portrait" : "landscape";
     const BoolPortrait = tam.height > tam.width ? true : false;
     
-    this.msg_loading= '';
+    //this.msg_loading= '';
     console.log("debug info: Actualiza el render..");
 
     //this.test_pintar = '';
@@ -189,10 +189,7 @@ export default class App extends React.Component {
 const styles = StyleSheet.create({
   containerPortrait: {
     flex: 1,
-     backgroundColor: '#151515',
-
-    // alignItems: 'center',
-    // justifyContent: 'center',
+     backgroundColor: '#151515'
   },
   containerLandscape: {
     flex: 1, 

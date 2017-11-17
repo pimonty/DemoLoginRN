@@ -1,4 +1,8 @@
-'use strict'
+
+// ATENCION: Utilizar el modo estricto provoca warning y errores durante el uso
+//de variables this.Nvariable en cualquier método de cualquier clase 
+//'use strict'
+
 import React, { Component } from 'react';
 import { StyleSheet, Text } from 'react-native';
 
@@ -20,6 +24,8 @@ var firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 
+
+
 export default class Inputlogin extends Component {
 
   
@@ -31,6 +37,8 @@ export default class Inputlogin extends Component {
     this.state = {
       Eexito_login: false,
       Eexito_auth: false,
+      Ealt_exito_logueado: true,
+    
     };
 
     console.log('-------CONTRUCTOR EJECUTADO -----');
@@ -39,7 +47,15 @@ export default class Inputlogin extends Component {
     this.max_logintentos = 3;
     this.logintentos = 0;
 
-    
+    //NOTA IMPORTANTE: 
+    //Si habitas 'use strict' provocará error ya que se considerará
+    //de solo lectura. El propósito es que sea lectura/escritura entre todos
+    //los métodos de la clase exclusivamente.
+    this.alt_exito_logueado = false;
+
+    //Captura el código de error y mensaje de Firebase.
+    this.errorCode = '';
+    this.errorMensaje = '';
     
 
   }
@@ -67,7 +83,7 @@ _UI_login_msg(intentos){
       } else{
 // No permite ejecutar más mensajes de error.
         this.logintentos = this.max_logintentos +1;
-        this.props.funcEvent('No ha sido posible:'+datalogin.error);    
+        this.props.funcEvent('No ha sido posible:'+ global.datalogin.error);    
 
       }
       
@@ -99,10 +115,108 @@ espera_desbloqueo_candado(intentos){
 }
 
 
+//Segundo método para esperar resolver el login asincronamente.
+//Al llamarla no bloquea la ejecución del código principal.
+  async Esperar_resolver_loguin(espera){
+//  console.log(intentos);
+//   while(intentos > 0){
+
+//     if (this.alt_exito_logueado){
+//       console.log('entró e intentos:' + intentos);
+//       this.props.funcEvent('Bienvenido/n Autorizado en Firebase.');
+//       //return;
+//     }
+
+//     // //await this.tiempo_de_espera(espera);
+//     this.tiempo_de_espera(intentos);
+    
+//     console.log('intentos:' + intentos);
+//     intentos = intentos - 1;
+//   }
+
+//   console.log('salió del while' + intentos);
+
+//   this.props.funcEvent(msgerror);
+//   return;
+
+  console.log("dentro de Esperar resolver login....");
+  return await this.tiempo_de_espera(espera);
+
+}
+
+  tiempo_de_espera(tespera){
+  // return new Promise((resolve,reject)=>{ 
+  //   setTimeout(function(){console.log('esperando...')},tespera)
+  // });
+    console.log("dentro de tiempo espera....");
+  return new Promise((resolve, reject) => { 
+
+  setTimeout(() => {
+      //Dentro de "n" segundos ejecuta este código
+    if (this.alt_exito_logueado) {
+        resolve(true);
+       console.log('logueado_con_exito TRUE');
+      } else {
+        
+        resolve(false);
+        console.log('logueado_con_exito FALSE' + ', candado:' + global.candado_logueando);
+      }
+    }, tespera);
+    
+  }  
+  
+  );
+
+  }
 
 
+  async mostrar_mensaje_login(tiempo) { 
+    var prom; 
+    for (var contador = 3; contador > 0; contador--) {
+      prom = await this.comprobar_login(tiempo); 
+      
+      if (prom === true){
+        //El candado está cerrado y hay éxito en el loguin.
+
+        //Mostrar mensaje
+        this.props.funcEvent('Promesa resuelta con candado desbloqueado y exito loguin.');
+        //Devolver true por el acierto
+        return true;
+
+      } else {
+        console.log('entro....MSG:' + this.errorMensaje);
+        //Seguir esperando siempre que no haya error.
+        if (this.errorMensaje != ''){
+          //Hay un error, por eso no hay exito ni candado cerrado.
+          this.props.funcEvent('Mensaje de error:' + this.errorMensaje);
+          return false;
+        }
+      }
+
+     }
+
+     console.log('saliendo antes del return...'); 
+     this.props.funcEvent('No hay respuesta del loguin. Error.Falta mostrar el error.');
+     return false;
+  }
+
+  comprobar_login(espera) {
+    return new Promise((resolve) => { setTimeout(() => {
+
+            console.log('código timeout, espera:' + espera);
+
+            if ((this.alt_exito_logueado) && (!global.candado_logueando)){
+                resolve(true) 
+            } else {            
+              resolve(false);
+            }
+
+      }, 3500); });
+
+    }
 
 
+    
   _init_login() {
     
     console.log('WELLCOME LOGUEAR.JS');
@@ -164,9 +278,10 @@ espera_desbloqueo_candado(intentos){
 
     console.log(email + ':' + password);
 
-    //Captura el código de error y mensaje de Firebase.
-    var errorCode = false;
-    var errorMensaje = false;
+    // //Captura el código de error y mensaje de Firebase.
+    this.errorCode = '';
+    this.errorMensaje = '';
+    var borrame = '';
 
 
     //Función asíncrona de logueo en Firebase, se establece un candado global.
@@ -184,26 +299,30 @@ espera_desbloqueo_candado(intentos){
       console.log('Firebase auth THEN- Auténtificado con éxito.');
       global.candado_logueando = false; 
       logueado_con_exito=true;
+
+      //variable para probar resolver el loguin asincronamente.
+      //this.setState({alt_exito_logueado:true});
+      this.alt_exito_logueado = true;
      
       //NOTA: NO FUNCIONA NINGUNA NOTIFICACION EN PANTALLA EN ESTE PUNTO:
       // FALLA ALERT
       // FALLA this.props.funcion()
 
-    }).catch(function (error) { 
+    }).catch((error) => { 
       //Manejo de errores.       
       console.log('Firebase-auth.CATCH - ERROR CODE:'+error.code);
-      
+      borrame = 'tengo un error de prueba';
       
       switch(error.code){
         
         case 'auth/invalid-email':
-        errorCode= true
-        errorMensaje = 'Formato de email no válido.' 
+        this.errorCode= true
+        this.errorMensaje = 'Formato de email no válido.' 
         break;
 
         case 'auth/wrong-password':
-        errorCode= true
-        errorMensaje = 'Contraseña incorrecta.'  
+        this.errorCode= true
+        this.errorMensaje = 'Contraseña incorrecta.'  
         break;
 
         default:
@@ -211,41 +330,111 @@ espera_desbloqueo_candado(intentos){
         console.log('Firebase auth CATCH - error no controlado con code:'+error.code+', y mensaje:'+error.message);
 
         //Ha capturado una excepción que nada tiene que ver con firebase
-        errorCode= false
-        errorMensaje = false        
+        this.errorCode= 'Excepción';
+        this.errorMensaje = 'Excepción';       
         break;
 
       }
+      
+     
 
       //Error al loguearse, fin del logueado.
       logueado_con_exito=false
+      
+      //variable para probar resolver el loguin asincronamente.
+      //this.setState({ alt_exito_logueado : false });
+      this.alt_exito_logueado = false;
+
       global.candado_logueando = false; 
+
+      // NOTA IMPORTANTE: 
+      // MUCHO CUIDADO NO COLOCAR EN CATCH "function(error)" ya que no permite
+      // guardar en variables ni llamar a funciones. Hay que indicar "(error) =>"
+      // this.borrame_marcarerror();
+     
       
     });
 
-
     
-    //NOTA PROMESA:
-    //resolve: valor devuelto una vez resuelve la promesa.
-    //reject: Evento de error devuelto.
-    const p = new Promise((resolve,reject) =>{
-      setTimeout(()=> {
-        //Dentro de "n" segundos ejecuta este código
-        if(logueado_con_exito){
-          resolve(true);
-        }else{
-          resolve(false);
-        }        
-      },3000);
-    });
 
-  p.then(data => {
-    if(data){
-      this.props.funcEvent('Bienvenido/n Autorizado en Firebase.');
-    }else{
-      this.props.funcEvent(errorMensaje);
+//Opciones para consultar la resolución del login:
+//Valor 1: Funciona correctamente
+//Valor 2: ....
+
+  var opcion_resolver_login = 3;
+
+  switch (opcion_resolver_login){
+    case 1:{
+
+      //*************PRUEBA1****(resolver loguin asincronamente)*************
+
+      //NOTA PROMESA:
+      //resolve: valor devuelto una vez resuelve la promesa.
+      //reject: Evento de error devuelto.
+      const p = new Promise((resolve, reject) => {
+        setTimeout(() => {
+          //Dentro de "n" segundos ejecuta este código
+          if (logueado_con_exito) {
+            resolve(true);
+          } else {
+            resolve(false);
+          }
+        }, 3000);
+      });
+
+      p.then(data => {
+        if (data) {
+          this.props.funcEvent('Bienvenido/n Autorizado en Firebase.');
+        } else {
+          this.props.funcEvent(errorMensaje);
+        }
+      })
+
+
+
+      break;
     }
-  })
+    case 2:{
+
+      //*************PRUEBA2**(resolver loguin asincronamente)***************
+
+      //NOTA ALTERNATIVA: Lanzar función asincrona, en su interior con espera sincrona hasta
+      //ejecutar su código.
+     
+      for (var contador = 4; contador > 0; contador--) {
+        console.log("FOR contador :" + contador);
+        const p = this.Esperar_resolver_loguin(5000); //Tiempo + this.alt_exito_logueado
+              
+        p.then((respuesta_promesa)=>{
+          if((respuesta_promesa)  && ( !global.candado_logueando) ){
+                alert('acierto' + respuesta_promesa + 'contador:' + contador);
+              }else{
+                console.log('FALLO: respuesta promesa:' + respuesta_promesa +', global.candado.logueando:' + global.candado_loguenado);
+              }
+              
+            })
+
+      }   
+     
+      break;
+    }    
+
+    case 3:{
+
+      //Caso donde lanza una función asíncrona desde este hilo principal.
+
+      this.mostrar_mensaje_login(2000);    
+
+
+      break;
+    }
+    default:{
+      console.log('Loguear.js: ERROR_DEV -> No ha indicado como resolver la consulta del LOGIN');
+    }
+
+
+  }
+
 
    
 }//Fin
