@@ -52,6 +52,7 @@ export default class Inputlogin extends Component {
     //de solo lectura. El propósito es que sea lectura/escritura entre todos
     //los métodos de la clase exclusivamente.
     this.alt_exito_logueado = false;
+    this.borrame = '123123123123123123';
 
     //Captura el código de error y mensaje de Firebase.
     this.errorCode = '';
@@ -175,11 +176,13 @@ espera_desbloqueo_candado(intentos){
     for (var contador = 3; contador > 0; contador--) {
       prom = await this.comprobar_login(tiempo); 
       
+      console.log('prom:' + prom);
+
       if (prom === true){
         //El candado está cerrado y hay éxito en el loguin.
 
         //Mostrar mensaje
-        this.props.funcEvent('Promesa resuelta con candado desbloqueado y exito loguin.');
+        this.props.funcEvent('Logueado con éxito');
         //Devolver true por el acierto
         return true;
 
@@ -188,7 +191,7 @@ espera_desbloqueo_candado(intentos){
         //Seguir esperando siempre que no haya error.
         if (this.errorMensaje != ''){
           //Hay un error, por eso no hay exito ni candado cerrado.
-          this.props.funcEvent('Mensaje de error:' + this.errorMensaje);
+          this.props.funcEvent(this.errorMensaje);
           return false;
         }
       }
@@ -201,22 +204,50 @@ espera_desbloqueo_candado(intentos){
   }
 
   comprobar_login(espera) {
-    return new Promise((resolve) => { setTimeout(() => {
 
-            console.log('código timeout, espera:' + espera);
+    //Al tratar con un setTimeout hay que tener en cuenta que dentro de su Scope no lee
+    //las variables this.x indicadas en el contructor hay que realizar una función externa.
+    var mifuncion = function(){
 
-            if ((this.alt_exito_logueado) && (!global.candado_logueando)){
-                resolve(true) 
-            } else {            
-              resolve(false);
-            }
+      console.log('código timeout, espera:' + espera);
+      console.log('exito:' + this.alt_exito_logueado + ', globa:' + global.candado_logueando);
+      console.log(this.borrame);
+      if ((this.alt_exito_logueado) && (!global.candado_logueando)) {
+        this.alt_exito_logueado = false;
+        return true;
+      } else { 
+        return false;
+      }
+    }
 
-      }, 3500); });
+    //Retorna el valor de la promesa.
+      return new Promise((resolve) => { 
+        setTimeout( () => {resolve(mifuncion());},3500);});
+
+    // **************************************************************     
+    // APUNTE IMPORTANTE SOBRE SCOPE:
+        // Dentro del entorno del setTimeout no lee el valor de las variables this.var iniciadas
+        //en el constructor hay que declarar una función externa al setTimeout.
+
+        //Se deja el código anterior a modo ilustrativo.
+
+    // return new Promise((resolve) => { setTimeout(() => {
+
+    //         console.log('código timeout, espera:' + espera);
+    //       console.log('exito:' + this.alt_exito_logueado + ', globa:' + global.candado_logueando);
+    //       console.log(this.borrame);
+    //         if ((this.alt_exito_logueado) && (!global.candado_logueando)){
+    //             resolve(true) 
+    //         } else {            
+    //           resolve(false);
+    //         }
+
+    //   }, 3500); });
 
     }
 
 
-    
+
   _init_login() {
     
     console.log('WELLCOME LOGUEAR.JS');
@@ -280,7 +311,7 @@ espera_desbloqueo_candado(intentos){
 
     // //Captura el código de error y mensaje de Firebase.
     this.errorCode = '';
-    this.errorMensaje = '';
+    this.errorMensaje = ''; 
     var borrame = '';
 
 
@@ -307,6 +338,7 @@ espera_desbloqueo_candado(intentos){
       //NOTA: NO FUNCIONA NINGUNA NOTIFICACION EN PANTALLA EN ESTE PUNTO:
       // FALLA ALERT
       // FALLA this.props.funcion()
+      console.log('acierto...valor this.alt_exito_logueado:' + this.alt_exito_logueado +' , logueado_con_exito:' + logueado_con_exito  )
 
     }).catch((error) => { 
       //Manejo de errores.       
@@ -359,7 +391,9 @@ espera_desbloqueo_candado(intentos){
 
 //Opciones para consultar la resolución del login:
 //Valor 1: Funciona correctamente
-//Valor 2: ....
+//Valor 2: (falla) intento de 3 iteraciones con espera.
+//Valor 3: (funciona) llamada a función asíncrona realiza "n" intentos de "t" segundos
+//          consulta el estado del loguin, en caso positivo o negativo muestra mensaje al usuario.
 
   var opcion_resolver_login = 3;
 

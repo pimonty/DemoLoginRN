@@ -65,17 +65,10 @@ export default class App extends React.Component {
     console.log('usuario:' + global.datalogin.user); 
     console.log('password:' + global.datalogin.pass);
 
-    //Dentro de render() no lo renderiza
-    this.msg_loading = <Inputlogin funcEvent={this.eventLogin} user={global.datalogin.user} pass={global.datalogin.pass} />;
-    //console.log(this.msg_loading);
-
     // this.setState({
     //   renderizer: <Inputlogin funcEvent={this.eventLogin} user={global.datalogin.user} pass={global.datalogin.pass} />
     // });
 
-   
-
-    let pruebame ='mensaje desde otra variable';
     this.test_pintar = <Inputlogin funcEvent={this.eventLogin} user={global.datalogin.user} pass={global.datalogin.pass} />;
 
   }
@@ -99,10 +92,10 @@ export default class App extends React.Component {
     const orientation = tam.height > tam.width ? "portrait" : "landscape";
     const BoolPortrait = tam.height > tam.width ? true : false;
     
-    //this.msg_loading= '';
+    this.msg_loading= '';
     console.log("debug info: Actualiza el render..");
 
-    //this.test_pintar = '';
+    // this.test_pintar = '';
     
   
     //ATENCIÓN EJEMPLO DIDACTICO: CREA BUCLE INFINITO, MUCHO CUIDADO
@@ -189,7 +182,10 @@ export default class App extends React.Component {
 const styles = StyleSheet.create({
   containerPortrait: {
     flex: 1,
-     backgroundColor: '#151515'
+     backgroundColor: '#151515',
+
+    // alignItems: 'center',
+    // justifyContent: 'center',
   },
   containerLandscape: {
     flex: 1, 
