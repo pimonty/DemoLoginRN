@@ -38,6 +38,7 @@ export default class Inputlogin extends Component {
       Eexito_login: false,
       Eexito_auth: false,
       Ealt_exito_logueado: true,
+      loading: this.props.loading,
     
     };
 
@@ -57,7 +58,12 @@ export default class Inputlogin extends Component {
     //Captura el código de error y mensaje de Firebase.
     this.errorCode = '';
     this.errorMensaje = '';
-    
+
+    //DEbido a que la primera vez se invoca mediante DidMount y las posteriores
+    //se invoca desde el padre mediante el evento de la función UpdateProps hay
+    //que definir el usuario y contraseña a nivel global a todos los métodos de la clase.
+    this.user = '';
+    this.pass = '';
 
   }
 
@@ -119,6 +125,10 @@ espera_desbloqueo_candado(intentos){
 //Segundo método para esperar resolver el login asincronamente.
 //Al llamarla no bloquea la ejecución del código principal.
   async Esperar_resolver_loguin(espera){
+
+//NOTA DIDACTICA: Mucho cuidado con la ejecución asíncrona con esperas, 
+//el siguiente código es erróneo, pero muy común.
+
 //  console.log(intentos);
 //   while(intentos > 0){
 
@@ -184,6 +194,11 @@ espera_desbloqueo_candado(intentos){
         //Mostrar mensaje
         this.props.funcEvent('Logueado con éxito');
         //Devolver true por el acierto
+        
+        this.setState({
+          loading: 'You are logged',
+        })
+
         return true;
 
       } else {
@@ -192,6 +207,12 @@ espera_desbloqueo_candado(intentos){
         if (this.errorMensaje != ''){
           //Hay un error, por eso no hay exito ni candado cerrado.
           this.props.funcEvent(this.errorMensaje);
+
+          this.setState({ 
+            loading: '',
+          })
+
+
           return false;
         }
       }
@@ -199,7 +220,12 @@ espera_desbloqueo_candado(intentos){
      }
 
      console.log('saliendo antes del return...'); 
-     this.props.funcEvent('No hay respuesta del loguin. Error.Falta mostrar el error.');
+     this.props.funcEvent('No hay respuesta del login');
+
+     this.setState({
+       loading: 'Try again...',
+     })
+
      return false;
   }
 
@@ -270,11 +296,11 @@ espera_desbloqueo_candado(intentos){
     firebase.auth().onAuthStateChanged(function (user) {
       if (user) {
         console.log('(NO OK)Existe un usuario logueado, se marca para desloguear.');
-         this.existe_user = true;
+         this.existe_user = true; 
       } else {
         console.log('(OK) No existe un usuario activo.');
-        this.existe_user = false;
-        testerwarning = false;
+        this.existe_user = false; 
+        testerwarning = false; 
       }
     });
 
@@ -302,16 +328,16 @@ espera_desbloqueo_candado(intentos){
     }
     else { console.log('No hay usuario logueado, procede a autentificarse user:pass'); }
 
-
+    
     //Asigna los datos introducidos por el usuario
-    var email = this.props.user 
-    var password = this.props.pass; 
+    var email = this.user;
+    var password = this.pass;
 
     console.log(email + ':' + password);
 
     // //Captura el código de error y mensaje de Firebase.
     this.errorCode = '';
-    this.errorMensaje = ''; 
+    this.errorMensaje = '';
     var borrame = '';
 
 
@@ -349,13 +375,18 @@ espera_desbloqueo_candado(intentos){
         
         case 'auth/invalid-email':
         this.errorCode= true
-        this.errorMensaje = 'Formato de email no válido.' 
+        this.errorMensaje = 'Invalid email format.';
         break;
 
         case 'auth/wrong-password':
         this.errorCode= true
-        this.errorMensaje = 'Contraseña incorrecta.'  
+        this.errorMensaje = 'Incorrect password.';
         break;
+
+        case 'auth/user-not-found':
+          this.errorCode = true
+          this.errorMensaje = 'User not registred.';
+          break;
 
         default:
         //Informar del error capturado
@@ -456,9 +487,14 @@ espera_desbloqueo_candado(intentos){
     case 3:{
 
       //Caso donde lanza una función asíncrona desde este hilo principal.
-
+      
+      this.setState({
+        loading: 'Loading...',
+      })
+     
       this.mostrar_mensaje_login(2000);    
 
+      
 
       break;
     }
@@ -476,8 +512,14 @@ espera_desbloqueo_candado(intentos){
   
   //Invocación 1º cuando se crea el componente.
   componentDidMount() {
-    console.log("Primera invocación al componente Loguear.js,ahora procederá a ser montado")
+
+    this.user = this.props.user;
+    this.pass = this.props.pass;
+
+    console.log('Primera invocación al componente Loguear.js,ahora procederá a ser montado');
+    
     this._init_login(); 
+
   }
 
   //Se invoca en la 2º y posteriores llamadas al componente cargado.
@@ -494,6 +536,12 @@ espera_desbloqueo_candado(intentos){
 
 
       console.log("Segundo y posteriores invocaciones al componente Loguear.js va a ser ACTUALIZADO."+ nextProps)
+      
+      this.user = nextProps.user;
+      this.pass = nextProps.pass;
+      
+      console.log('Segunda y posteriores llamadas RECOBE:USER/PASS->, ' + this.props.user + '( <-this.props ) ----- (NextProps->)' + this.props.pass);
+
       this._init_login();     
     
   }
@@ -507,10 +555,10 @@ espera_desbloqueo_candado(intentos){
 
   render() {
     var entra, falla;
-    entra = <Text>Ha quedado logueado</Text>
-    falla = <Text>Fallo en el login</Text>
+    entra = <Text></Text>
+    falla = <Text></Text>
     return (
-      this.state.exito_login ? falla : entra
+     <Text>{this.state.loading}</Text>
     );
 
 

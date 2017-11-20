@@ -31,11 +31,12 @@ export default class App extends React.Component {
                 renderizer:'',}; 
     this.pintar; 
     this.msg_loading = <Text>Loading...</Text>   
-
+    
+    console.log('Constructor inicializa localuser y locapass');
     this.localuser='';
     this.localpass='';
 
-    this.test_pintar = <Text>Inicializando RENDER</Text>;
+    this.test_pintar = '';
     
   }
 
@@ -53,7 +54,8 @@ export default class App extends React.Component {
   } 
 
   //El hijo envía mediante props info al padre.
-  eventLogin(msg){
+  eventLogin(msg){   
+
     alert(msg);
   }
 
@@ -65,11 +67,19 @@ export default class App extends React.Component {
     console.log('usuario:' + global.datalogin.user); 
     console.log('password:' + global.datalogin.pass);
 
-    // this.setState({
-    //   renderizer: <Inputlogin funcEvent={this.eventLogin} user={global.datalogin.user} pass={global.datalogin.pass} />
-    // });
+    
+    //NOTA: PAra mostrar un mensaje de LOADING... después de pulsar el botón hasta
+    //que muestre el mensaje con la respuesta, se realiza de la siguiente manera:
+    //1) pasar por "props" el state del componente padre.
+    //2) Asignar en un state local del hijo el state del padre.
+    //3) Colocar el setState donde muestra el Loading y otro mensaje de cierre.
+    this.test_pintar = <Inputlogin funcEvent={this.eventLogin} user={global.datalogin.user} pass={global.datalogin.pass} loading={this.state.msg_loading}/>;
 
-    this.test_pintar = <Inputlogin funcEvent={this.eventLogin} user={global.datalogin.user} pass={global.datalogin.pass} />;
+    // Al pusar tiene que renderizar la respuesta minimo un setState
+    this.setState({
+      msg_loading: ''
+    });
+  
 
   }
 
@@ -80,10 +90,6 @@ export default class App extends React.Component {
   _clear(){
     console.log('limpieza del login renderizado ');
     this.test_pintar = '';
-    // this.setState({
-    //   renderizer: ''
-    // });
-
   }
 
   render() {
@@ -92,7 +98,6 @@ export default class App extends React.Component {
     const orientation = tam.height > tam.width ? "portrait" : "landscape";
     const BoolPortrait = tam.height > tam.width ? true : false;
     
-    this.msg_loading= '';
     console.log("debug info: Actualiza el render..");
 
     // this.test_pintar = '';
@@ -156,15 +161,18 @@ export default class App extends React.Component {
             secureTextEntry/>
 
           
+          {<Text style={ BoolPortrait ? styles.Msg_respuesta_p : styles.Msg_respuesta_l}>{this.test_pintar}</Text>} 
 
-          <TouchableOpacity style={styles.btnlogin} onPress={() => { this._onPressLoginButton();  console.log('Presionado BtnLogin');  }} onPressOut={() => { this.setState({ renderizer: '' }); console.log('Liberado BtnLogin');}}> 
+          <TouchableOpacity style={styles.btnlogin} onPress={() => { this._onPressLoginButton();  console.log('Presionado BtnLogin');  }} onPressOut={() => { console.log('Liberado BtnLogin');}}> 
             <Text style={styles.btnlogintxt}>Login test{this.state.prueba}</Text>
           </TouchableOpacity>
-                  
+                 
+                   
          
-         {<Text>{this.test_pintar}</Text>}
          {this._clear()}
         
+         
+
         </View>
 
 
@@ -193,7 +201,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#01DF3A'    
   },
   seccion1_p:{
-    flex:43,
+    flex:33,
     // backgroundColor:'#f44',
     alignItems: 'center',
     justifyContent: 'center'
@@ -257,6 +265,20 @@ const styles = StyleSheet.create({
   },
   Texto_Titulo:{
     backgroundColor:'#FFFFBB',    
+    textAlign: 'center',
+    fontWeight: 'bold',
+    fontSize: 14,
+    marginBottom: 20
+  },
+  Msg_respuesta_p: {
+    backgroundColor: '#151515',
+    textAlign: 'center',
+    fontWeight: 'bold',
+    fontSize: 14,
+    marginBottom: 20
+  },
+  Msg_respuesta_l: {
+    backgroundColor: '#01DF3A',
     textAlign: 'center',
     fontWeight: 'bold',
     fontSize: 14,
