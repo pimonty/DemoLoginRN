@@ -5,6 +5,7 @@ import Inputlog from './code/login.js';
 import Inputlogin from './code/loguear.js';
 
 
+
 global.tam = Dimensions.get('window')
 global.datalogin={user:'',pass:'',error:'',loading:false};
 global.candado_logueando=false;
